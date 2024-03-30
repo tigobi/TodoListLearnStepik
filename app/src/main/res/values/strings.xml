@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Todo List</string>
+    <string name="add_new_note_description">Add new note</string>
+    <string name="save_note">Save note</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+    <string name="enter_note">Enter note:</string>
+    <string name="high">High</string>
+    <string name="error_note_empty">Please enter your note</string>
+</resources>

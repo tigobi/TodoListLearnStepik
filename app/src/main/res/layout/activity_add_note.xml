@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddNoteActivity">
+
+
+    <EditText
+        android:id="@+id/editTextNoteText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:ems="10"
+        android:hint="@string/enter_note"
+        android:inputType="textPersonName"
+        tools:ignore="MissingConstraints" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <RadioButton
+            android:id="@+id/radioButtonLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_green_light"
+            android:padding="8dp"
+            android:text="@string/low"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/editTextNoteText"
+            tools:ignore="MissingConstraints" />
+
+        <RadioButton
+            android:id="@+id/radioButtonMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_orange_light"
+            android:padding="8dp"
+            android:text="@string/medium"
+            android:checked="true"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/radioButtonMedium"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <RadioButton
+            android:id="@+id/radioButtonHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_light"
+            android:padding="8dp"
+            android:text="@string/high"
+            android:textColor="@color/white"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="111dp" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonSaveNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:text="@string/save_note"
+        tools:ignore="MissingConstraints" />
+</LinearLayout>
