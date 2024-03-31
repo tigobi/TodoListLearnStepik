@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-
+        recyclerView = findViewById(R.id.recyclerViewNotes);
         buttonAddNote = findViewById(R.id.buttonAddNote);
     }
 

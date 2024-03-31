@@ -59,7 +59,6 @@ public class AddNoteActivity extends AppCompatActivity {
         if (radioButtonLow.isChecked()) priority = 0;
         else if (radioButtonMedium.isChecked()) priority = 1;
         else priority = 2;
-        int a = 0;//for changes
         return priority;
 
 
