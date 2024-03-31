@@ -21,6 +21,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
         notesAdapter = new NotesAdapter();
+        notesAdapter.setOnNoteClickListener(new NotesAdapter.OnNoteClickListener() {
+            @Override
+            public void onNoteCLick(Note note) {
+                database.remove(note.getId());
+                showNotes();
+            }
+        });
         recyclerView.setAdapter(notesAdapter);
         buttonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,7 +10,9 @@
         android:id="@+id/recyclerViewNotes"
         android:layout_width="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:layout_height="match_parent" />
+        tools:listitem="@layout/note_item"
+        android:layout_height="match_parent"
+        tools:itemCount="100" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonAddNote"
