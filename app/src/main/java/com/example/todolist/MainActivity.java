@@ -3,15 +3,14 @@ package com.example.todolist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
+    private NotesAdapter notesAdapter;
     private RecyclerView recyclerView;
     private FloatingActionButton buttonAddNote;
     private Database database = Database.getInstance();
@@ -21,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        notesAdapter = new NotesAdapter();
+        recyclerView.setAdapter(notesAdapter);
         buttonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,39 +43,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotes() {
-        linearLayoutNotes.removeAllViews();
-        for (Note note : database.getNotes()
-        ) {
-            View view = getLayoutInflater().inflate(
-                    R.layout.note_item,
-                    linearLayoutNotes,
-                    false
-            );
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    database.remove(note.getId());
-                    showNotes();
-                }
-            });
-            TextView textViewNote = view.findViewById(R.id.textViewNote);
-            textViewNote.setText(note.getText());
-
-            int colorResId;
-            switch (note.getPriority()) {
-                case 0:
-                    colorResId = android.R.color.holo_green_light;
-                    break;
-                case 1:
-                    colorResId = android.R.color.holo_orange_dark;
-                    break;
-                default:
-                    colorResId = android.R.color.holo_red_light;
-            }
-            int color = ContextCompat.getColor(this, colorResId);
-            textViewNote.setBackgroundColor(color);
-            linearLayoutNotes.addView(view);
-        }
+        notesAdapter.setNotes(database.getNotes());
     }
-
 }
