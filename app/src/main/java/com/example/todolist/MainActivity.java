@@ -2,8 +2,6 @@ package com.example.todolist;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -20,8 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private NotesAdapter notesAdapter;
     private RecyclerView recyclerView;
     private FloatingActionButton buttonAddNote;
-    private NoteDatabase noteDatabase;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
         notesAdapter = new NotesAdapter();
-        noteDatabase = NoteDatabase.getInstance(getApplication());
+        viewModel = new MainViewModel(getApplication());
         notesAdapter.setOnNoteClickListener(new NotesAdapter.OnNoteClickListener() {
             @Override
             public void onNoteCLick(Note note) {
@@ -37,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(notesAdapter);
-        noteDatabase.notesDao().getNotes().observe(this, new Observer<List<Note>>() {
+        viewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
                 notesAdapter.setNotes(notes);
@@ -65,14 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     ) {
                         int position = viewHolder.getAdapterPosition();
                         Note note = notesAdapter.getNotes().get(position);
-
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                noteDatabase.notesDao().remove(note.getId());
-                            }
-                        });
-
+                        viewModel.remove(note);
                     }
                 });
         itemTouchHelper.attachToRecyclerView(recyclerView);
