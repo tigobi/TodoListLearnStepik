@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,15 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         initViews();
         notesAdapter = new NotesAdapter();
-        viewModel = new MainViewModel(getApplication());
-        notesAdapter.setOnNoteClickListener(new NotesAdapter.OnNoteClickListener() {
-            @Override
-            public void onNoteCLick(Note note) {
-
-            }
-        });
         recyclerView.setAdapter(notesAdapter);
         viewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
