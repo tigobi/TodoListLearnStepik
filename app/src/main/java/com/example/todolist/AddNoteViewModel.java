@@ -7,6 +7,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class AddNoteViewModel extends AndroidViewModel {
     private NotesDao notesDao;
     private MutableLiveData<Boolean> shouldCloseScreen = new MutableLiveData<>();
@@ -21,13 +25,14 @@ public class AddNoteViewModel extends AndroidViewModel {
     }
 
     public void saveNote(Note note) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                notesDao.add(note);
-                shouldCloseScreen.postValue(true);
-            }
-        });
-        thread.start();
+        notesDao.add(note)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Throwable {
+                        shouldCloseScreen.postValue(true);
+                    }
+                });
     }
 }
