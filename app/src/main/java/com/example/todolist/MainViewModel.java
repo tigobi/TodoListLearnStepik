@@ -6,14 +6,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Action;
@@ -23,7 +19,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class MainViewModel extends AndroidViewModel {
     private NoteDatabase noteDatabase;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private MutableLiveData<List<Note>> notes = new MutableLiveData<>();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -31,54 +26,28 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Note>> getNotes() {
-        return notes;
+        return noteDatabase.notesDao().getNotes();
     }
 
-    public void refreshList() {
-        Disposable disposable = getNotesRX()
+    public void remove(Note note) {
+        Disposable disposable = noteDatabase.notesDao().removeNote(note.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Note>>() {
+                .subscribe(new Action() {
                     @Override
-                    public void accept(List<Note> notesFromDb) throws Throwable {
-                        notes.setValue(notesFromDb);
+                    public void run() throws Throwable {
+                        Log.d("MainViewModel", "abobus MainViewModel removed" + note.getId());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.d("MainViewModel", "error remove" + note.getId());
+
                     }
                 });
         compositeDisposable.add(disposable);
     }
 
-    private Single<List<Note>> getNotesRX() {
-        return Single.fromCallable(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() throws Exception {
-                return noteDatabase.notesDao().getNotes();
-            }
-        });
-    }
-
-    public void remove(Note note) {
-        Disposable disposable = removeRX(note)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
-                               @Override
-                               public void run() throws Throwable {
-                                   Log.d("MainViewModel", "abobus MainViewModel removed" + note.getId());
-                                   refreshList();
-                               }
-                           }
-                );
-        compositeDisposable.add(disposable);
-    }
-
-    private Completable removeRX(Note note) {
-        return Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Throwable {
-                noteDatabase.notesDao().removeNote(note.getId());
-            }
-        });
-    }
 
     @Override
     protected void onCleared() {
